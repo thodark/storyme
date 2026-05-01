@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương Tiếp Theo | Thư Gửi T</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--
+        Vietnamese-safe font stack:
+        • Lora            – serif body, has full Vietnamese subset
+        • Playfair Display – display headings, Vietnamese subset
+        • Josefin Sans    – label caps, Latin + Vietnamese
+        • IM Fell English – italic decorative quotes
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DESIGN TOKENS ──────────────────────────────────────────── */
+        :root {
+            --parchment-0:   #fdf8ee;
+            --parchment-1:   #f5edd8;
+            --parchment-2:   #ece0c4;
+            --parchment-3:   #d8ccb0;
+            --ink:           #1c1008;
+            --ink-muted:     #5a4e38;
+            --ink-faint:     #9c8e76;
+            --burgundy:      #6b1a1a;
+            --burgundy-deep: #4a0f0f;
+            --burgundy-glow: rgba(107, 26, 26, 0.15);
+            --gold:          #c9a84c;
+            --gold-pale:     #e8d49a;
+            --spine-width:   18px;
+            --page-pad-h:    clamp(28px, 6vw, 80px);
+            --page-pad-v:    clamp(40px, 5vh, 70px);
+            --radius:        3px;
+            --transition:    0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            /* Font families — all Vietnamese-safe */
+            --font-body:     'Lora', 'Times New Roman', serif;
+            --font-display:  'Playfair Display', 'Times New Roman', serif;
+            --font-label:    'Josefin Sans', sans-serif;
+            --font-quote:    'IM Fell English', 'Times New Roman', serif;
+        }
+
+        /* ── RESET & BASE ───────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            font-family: var(--font-body);
+            background: #0d0a07;
+            background-image:
+                radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(107,26,26,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(60,40,10,0.25)  0%, transparent 70%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+            opacity: 0.04;
+        }
+
+        /* ── BOOK CONTAINER ─────────────────────────────────────────── */
+        .scene {
+            position: relative;
+            width: 100%;
+            max-width: 980px;
+            z-index: 1;
+            perspective: 1200px;
+        }
+
+        .scene::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            filter: blur(22px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .book {
+            display: flex;
+            width: 100%;
+            min-height: 580px;
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow:
+                0 2px 4px   rgba(0,0,0,0.3),
+                0 8px 20px  rgba(0,0,0,0.45),
+                0 30px 70px rgba(0,0,0,0.5),
+                inset 0 0 0 1px rgba(255,255,255,0.06);
+            animation: bookReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes bookReveal {
+            from { opacity: 0; transform: translateY(28px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)   scale(1); }
+        }
+
+        /* ── PARCHMENT TEXTURE ──────────────────────────────────────── */
+        .page {
+            flex: 1;
+            padding: var(--page-pad-v) var(--page-pad-h);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background-color: var(--parchment-0);
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
+            background-size: 220px 220px;
+        }
+
+        .page::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            background-image:
+                radial-gradient(ellipse 3px 2px at 15% 22%, rgba(160,120,60,0.12) 0%, transparent 100%),
+                radial-gradient(ellipse 2px 3px at 78% 68%, rgba(140,100,50,0.09) 0%, transparent 100%),
+                radial-gradient(ellipse 4px 3px at 42% 85%, rgba(150,110,55,0.07) 0%, transparent 100%),
+                radial-gradient(ellipse 3px 2px at 91% 30%, rgba(130,95,45,0.08) 0%, transparent 100%),
+                radial-gradient(ellipse 2px 2px at 6%  74%, rgba(145,105,52,0.06) 0%, transparent 100%);
+        }
+
+        /* ── LEFT PAGE ──────────────────────────────────────────────── */
+        .page-left {
+            text-align: center;
+            align-items: center;
+            max-width: 340px;
+            flex: 0 0 340px;
+            background-image:
+                linear-gradient(to right, rgba(30,15,5,0.18) 0%, transparent 18%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
+            background-color: var(--parchment-1);
+            background-size: auto, 220px 220px;
+        }
+
+        .left-ornament-top,
+        .left-ornament-bot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            opacity: 0.6;
+            font-size: 1.4rem;
+            font-family: var(--font-display);
+            letter-spacing: 6px;
+            user-select: none;
+        }
+        .left-ornament-top { top: 28px; }
+        .left-ornament-bot { bottom: 28px; }
+
+        .chapter-label {
+            font-family: var(--font-label);
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            margin: 0 0 10px;
+        }
+
+        .letter-id {
+            font-family: var(--font-display);
+            font-size: clamp(3.2rem, 6vw, 5rem);
+            font-weight: 400;
+            line-height: 1;
+            color: var(--burgundy);
+            margin: 0 0 6px;
+            letter-spacing: -1px;
+            position: relative;
+            text-shadow:
+                0 1px 0 rgba(255,255,255,0.6),
+                0 -1px 3px rgba(107,26,26,0.3);
+            animation: idPop 0.7s 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes idPop {
+            from { opacity: 0; transform: scale(0.7); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .id-rule {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 16px auto;
+        }
+
+        .left-quote {
+            font-family: var(--font-quote);
+            font-style: italic;
+            font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+            font-weight: 400;
+            color: var(--ink-muted);
+            line-height: 2;
+            max-width: 220px;
+            position: relative;
+            padding: 0 18px;
+            /* Lora renders Vietnamese tone marks beautifully */
+        }
+
+        .left-quote::before,
+        .left-quote::after {
+            content: '\201C';
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            line-height: 0;
+            position: absolute;
+            color: var(--gold);
+            opacity: 0.45;
+        }
+        .left-quote::before { top: 18px; left: -2px; }
+        .left-quote::after  { content: '\201D'; bottom: -6px; right: -2px; }
+
+        /* ── SPINE ──────────────────────────────────────────────────── */
+        .spine {
+            flex: 0 0 var(--spine-width);
+            width: var(--spine-width);
+            position: relative;
+            background: linear-gradient(
+                to right,
+                var(--burgundy-deep) 0%,
+                #8b2020 25%,
+                #a82828 50%,
+                #8b2020 75%,
+                var(--burgundy-deep) 100%
+            );
+            box-shadow:
+                inset -3px 0 8px rgba(0,0,0,0.4),
+                inset  3px 0 8px rgba(0,0,0,0.25),
+                inset  0  0 20px rgba(0,0,0,0.15);
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .spine::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            background: linear-gradient(to bottom,
+                transparent 0%, var(--gold-pale) 15%,
+                transparent 30%, var(--gold-pale) 50%,
+                transparent 65%, var(--gold-pale) 85%,
+                transparent 100%);
+            opacity: 0.4;
+        }
+
+        .spine::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 18px,
+                rgba(0,0,0,0.08) 18px,
+                rgba(0,0,0,0.08) 19px
+            );
+        }
+
+        /* ── RIGHT PAGE ─────────────────────────────────────────────── */
+        .page-right {
+            background-image:
+                linear-gradient(to left, rgba(30,15,5,0.14) 0%, transparent 18%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
+            background-color: var(--parchment-0);
+            background-size: auto, 220px 220px;
+        }
+
+        .page-right::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 42px; height: 42px;
+            background: linear-gradient(225deg, var(--parchment-2) 42%, var(--parchment-1) 58%);
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            box-shadow: -3px 3px 8px rgba(0,0,0,0.12);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ── FORM HEADING ────────────────────────────────────────────── */
+        .form-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+            font-weight: 400;
+            color: var(--ink);
+            margin: 0 0 8px;
+            line-height: 1.2;
+        }
+
+        .form-subtitle {
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--ink-faint);
+            margin: 0 0 32px;
+            letter-spacing: 0.01em;
+            line-height: 1.6;
+        }
+
+        /* ── FORM ELEMENTS ───────────────────────────────────────────── */
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .field-label {
+            font-family: var(--font-label);
+            font-size: 0.58rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+            transition: color var(--transition);
+        }
+
+        .form-group:focus-within .field-label {
+            color: var(--burgundy);
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--parchment-3);
+            padding: 8px 0 10px;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            outline: none;
+            color: var(--ink);
+            transition: border-color var(--transition);
+            position: relative;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-bottom-color: var(--burgundy);
+        }
+
+        .field-line {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 1.5px;
+            width: 0%;
+            background: var(--burgundy);
+            transition: width 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+        }
+
+        .form-group:focus-within .field-line { width: 100%; }
+
+        .textarea-wrap {
+            position: relative;
+            border-bottom: 1px solid var(--parchment-3);
+            transition: border-color var(--transition);
+        }
+
+        .textarea-wrap:focus-within {
+            border-bottom-color: var(--burgundy);
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 10px 0 0;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            line-height: 30px;
+            height: 155px;
+            outline: none;
+            color: var(--ink);
+            resize: none;
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 29px,
+                rgba(166,148,118,0.22) 29px,
+                rgba(166,148,118,0.22) 30px
+            );
+            background-attachment: local;
+        }
+
+        textarea::placeholder,
+        input::placeholder {
+            color: var(--ink-faint);
+            font-style: italic;
+            font-size: 0.95rem;
+            font-family: var(--font-body);
+        }
+
+        /* ── ERROR HINT ─────────────────────────────────────────────── */
+        .error-hint {
+            font-family: var(--font-body);
+            font-style: italic;
+            color: var(--burgundy);
+            font-size: 0.84rem;
+            margin-top: 5px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-hint.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ── SUBMIT BUTTON ──────────────────────────────────────────── */
+        .btn-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 8px;
+            gap: 16px;
+        }
+
+        .btn-submit {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--burgundy-deep);
+            color: var(--gold-pale);
+            border: 1px solid rgba(201,168,76,0.25);
+            padding: 13px 34px;
+            border-radius: var(--radius);
+            font-family: var(--font-label);
+            font-size: 0.68rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            outline: none;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+            box-shadow: 0 2px 8px rgba(74,15,15,0.35), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-submit:hover::before { transform: translateX(100%); }
+        .btn-submit:hover {
+            background: var(--burgundy);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107,26,26,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:disabled { opacity: 0.65; cursor: default; transform: none; }
+
+        .btn-spinner {
+            display: none;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(232,212,154,0.3);
+            border-top-color: var(--gold-pale);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .btn-submit.loading .btn-spinner { display: block; }
+        .btn-submit.loading .btn-text   { opacity: 0.7; }
+
+        /* ── SUCCESS STATE ───────────────────────────────────────────── */
+        #success-ui {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            gap: 0;
+        }
+
+        #success-ui.active { display: flex; }
+
+        .seal-wrap {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .wax-seal {
+            width: 100px;
+            height: 100px;
+            animation: sealDrop 0.7s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes sealDrop {
+            from { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+            to   { opacity: 1; transform: scale(1)   rotate(0deg); }
+        }
+
+        .seal-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(107,26,26,0.3);
+            animation: sealPulse 2s 0.8s ease-out infinite;
+        }
+
+        .seal-ring:nth-child(2) {
+            inset: -18px;
+            animation-delay: 1s;
+        }
+
+        @keyframes sealPulse {
+            0%   { opacity: 0.7; transform: scale(0.95); }
+            100% { opacity: 0;   transform: scale(1.4); }
+        }
+
+        .success-heading {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--burgundy);
+            margin: 0 0 10px;
+            animation: fadeUp 0.6s 0.5s both;
+        }
+
+        .success-body {
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--ink-muted);
+            line-height: 1.85;
+            max-width: 300px;
+            animation: fadeUp 0.6s 0.7s both;
+        }
+
+        .success-rule {
+            width: 50px; height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 18px auto;
+            animation: fadeUp 0.6s 0.65s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── PAGE NUMBERS ────────────────────────────────────────────── */
+        .page-num {
+            position: absolute;
+            bottom: 22px;
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 0.8rem;
+            color: var(--ink-faint);
+            opacity: 0.7;
+        }
+
+        .page-left  .page-num { left:  var(--page-pad-h); }
+        .page-right .page-num { right: var(--page-pad-h); }
+
+        /* ── FOOTER TAGLINE ──────────────────────────────────────────── */
+        .tagline {
+            margin-top: 20px;
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+            text-align: center;
+            z-index: 1;
+            animation: fadeIn 1.2s 1s both;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ── STAGGERED ANIMATIONS ────────────────────────────────────── */
+        .form-group,
+        .form-title,
+        .form-subtitle,
+        .btn-row {
+            animation: fadeUp 0.55s both;
+        }
+
+        .form-title    { animation-delay: 0.25s; }
+        .form-subtitle { animation-delay: 0.32s; }
+        .form-group:nth-child(1) { animation-delay: 0.38s; }
+        .form-group:nth-child(2) { animation-delay: 0.44s; }
+        .form-group:nth-child(3) { animation-delay: 0.50s; }
+        .btn-row                 { animation-delay: 0.56s; }
+
+        .chapter-label { animation: fadeUp 0.6s 0.3s both; }
+        .letter-id     { animation: idPop  0.7s 0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .id-rule       { animation: fadeUp 0.6s 0.7s both; }
+        .left-quote    { animation: fadeUp 0.6s 0.85s both; }
+
+        /* ── RESPONSIVE ──────────────────────────────────────────────── */
+        @media (max-width: 720px) {
+            body { padding: 16px 10px; }
+
+            .book { flex-direction: column; min-height: auto; }
+
+            .page-left {
+                flex: none;
+                max-width: 100%;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 22px;
+                padding: 28px 24px;
+                background-image:
+                    linear-gradient(to bottom, rgba(30,15,5,0.15) 0%, transparent 18%),
+                    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
+                border-bottom: 1px solid var(--parchment-3);
+            }
+
+            .left-ornament-top,
+            .left-ornament-bot,
+            .page-left .page-num { display: none; }
+
+            .id-rule { margin: 8px 0; }
+            .letter-id { font-size: 3rem; }
+
+            .left-quote {
+                text-align: left;
+                padding: 0 12px;
+                font-size: 0.9rem;
+                max-width: 200px;
+            }
+
+            .spine { display: none; }
+            .page-right { padding: 32px 20px 44px; }
+            .page-right::before { display: none; }
+        }
+
+        @media (max-width: 420px) {
+            .page-left { flex-direction: column; gap: 10px; padding: 24px 16px; }
+            .left-quote { max-width: 100%; text-align: center; font-size: 0.88rem; }
+            .letter-id  { font-size: 2.6rem; }
+        }
+
+        @media (min-width: 1400px) {
+            body { padding: 40px 24px; }
+            .scene { max-width: 1160px; }
+            .page { padding: 80px 90px; }
+            .page-left { max-width: 380px; flex: 0 0 380px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="scene">
+    <div class="book">
+
+        <!-- ═══ LEFT PAGE ═══════════════════════════════════════════ -->
+        <div class="page page-left">
+            <span class="left-ornament-top">✦ ✦ ✦</span>
+
+            <p class="chapter-label">Mã số lá thư</p>
+
+            <div class="letter-id" id="display-id">#────</div>
+
+            <div class="id-rule"></div>
+
+            <blockquote class="left-quote">
+                Mỗi dòng tin nhắn là một chương trong câu chuyện của chúng ta.
+            </blockquote>
+
+            <span class="left-ornament-bot">✦ ✦ ✦</span>
+            <span class="page-num">i</span>
+        </div>
+
+        <!-- ═══ SPINE ════════════════════════════════════════════════ -->
+        <div class="spine"></div>
+
+        <!-- ═══ RIGHT PAGE ══════════════════════════════════════════ -->
+        <div class="page page-right">
+
+            <!-- FORM ─────────────────────────────────────────── -->
+            <form id="letter-form" novalidate>
+                <h2 class="form-title">Gửi tin nhắn…</h2>
+                <p class="form-subtitle">Hãy để lại lời nhắn, tôi sẽ đọc từng chữ.</p>
+
+                <div class="form-group">
+                    <label class="field-label" for="f-name">Tên của bạn</label>
+                    <input id="f-name" type="text" name="name" placeholder="Ghi tên để tôi biết ai đã viết…" required autocomplete="name">
+                    <span class="field-line"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="f-email">Email — không bắt buộc</label>
+                    <input id="f-email" type="email" name="email" placeholder="Để tôi có thể hồi âm nếu muốn…" autocomplete="email">
+                    <span class="field-line"></span>
+                    <div id="email-error" class="error-hint" role="alert">✦ Email chưa đúng định dạng rồi!</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="f-message">Nội dung</label>
+                    <div class="textarea-wrap">
+                        <textarea id="f-message" name="message" placeholder="Hãy nhập nội dung chương tiếp theo…" required></textarea>
+                    </div>
+                </div>
+
+                <input type="hidden" name="Letter_ID" id="hidden-id">
+                <input type="hidden" name="_subject" id="hidden-subject">
+
+                <div class="btn-row">
+                    <button type="submit" class="btn-submit" id="btn-submit">
+                        <span class="btn-spinner"></span>
+                        <span class="btn-text">Gửi thư đi</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- SUCCESS ───────────────────────────────────────── -->
+            <div id="success-ui" role="status" aria-live="polite">
+                <div class="seal-wrap">
+                    <svg class="wax-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="waxGrad" cx="38%" cy="35%">
+                                <stop offset="0%"   stop-color="#9e2222"/>
+                                <stop offset="55%"  stop-color="#6b1a1a"/>
+                                <stop offset="100%" stop-color="#3e0d0d"/>
+                            </radialGradient>
+                            <radialGradient id="waxShine" cx="35%" cy="30%">
+                                <stop offset="0%"   stop-color="rgba(255,255,255,0.28)"/>
+                                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                            </radialGradient>
+                        </defs>
+                        <path d="M50 8 C62 6 76 14 82 26 C90 38 88 55 80 66 C72 77 58 85 45 83 C32 81 20 72 16 60 C10 46 14 28 26 18 C33 12 42 9 50 8Z" fill="url(#waxGrad)"/>
+                        <ellipse cx="38" cy="32" rx="14" ry="10" fill="url(#waxShine)" transform="rotate(-20 38 32)"/>
+                        <text x="50" y="57" text-anchor="middle" font-family="Playfair Display, serif" font-size="28" fill="rgba(232,212,154,0.85)" letter-spacing="0">T</text>
+                        <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="0.8" stroke-dasharray="3 3"/>
+                    </svg>
+                    <div class="seal-ring"></div>
+                    <div class="seal-ring"></div>
+                </div>
+
+                <h2 class="success-heading">Đã niêm phong!</h2>
+                <div class="success-rule"></div>
+                <p class="success-body">
+                    Lá thư đã được gửi đi thành công.<br>
+                    Cảm ơn bạn đã chia sẻ tâm tư.
+                </p>
+            </div>
+
+            <span class="page-num">ii</span>
+        </div>
+    </div>
+</div>
+
+<p class="tagline">✦ &nbsp; Thư Gửi T &nbsp; ✦</p>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const num = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('display-id').textContent    = '#' + num;
+        document.getElementById('hidden-id').value           = '#' + num;
+        document.getElementById('hidden-subject').value      = 'Lá thư mới #' + num;
+    });
+
+    const form      = document.getElementById('letter-form');
+    const successUI = document.getElementById('success-ui');
+    const emailInp  = document.getElementById('f-email');
+    const emailErr  = document.getElementById('email-error');
+    const btn       = document.getElementById('btn-submit');
+    const EMAIL_RE  = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+    function showEmailError(show) {
+        emailErr.classList.toggle('visible', show);
+    }
+
+    emailInp.addEventListener('input', () => {
+        if (emailErr.classList.contains('visible')) showEmailError(false);
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const emailVal = emailInp.value.trim();
+        if (emailVal && !EMAIL_RE.test(emailVal)) {
+            showEmailError(true);
+            emailInp.focus();
+            return;
+        }
+        showEmailError(false);
+
+        btn.disabled = true;
+        btn.classList.add('loading');
+        btn.querySelector('.btn-text').textContent = 'Đang gửi';
+
+        try {
+            const res = await fetch('https://formspree.io/f/xnjleylw', {
+                method:  'POST',
+                body:    new FormData(form),
+                headers: { Accept: 'application/json' },
+            });
+
+            if (res.ok) {
+                form.style.display = 'none';
+                successUI.classList.add('active');
+            } else {
+                throw new Error('server');
+            }
+        } catch {
+            alert('Có lỗi xảy ra. Vui lòng thử lại!');
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.querySelector('.btn-text').textContent = 'Gửi thư đi';
+        }
+    });
+</script>
+
+</body>
+</html>

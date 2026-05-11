@@ -6,17 +6,10 @@
     <title>Chương Tiếp Theo | Thư Gửi T</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!--
-        Vietnamese-safe font stack:
-        • Lora            – serif body, has full Vietnamese subset
-        • Playfair Display – display headings, Vietnamese subset
-        • Josefin Sans    – label caps, Latin + Vietnamese
-        • IM Fell English – italic decorative quotes
-    -->
+   
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 
     <style>
-        /* ── DESIGN TOKENS ──────────────────────────────────────────── */
         :root {
             --parchment-0:   #fdf8ee;
             --parchment-1:   #f5edd8;
@@ -43,7 +36,6 @@
             --font-quote:    'IM Fell English', 'Times New Roman', serif;
         }
 
-        /* ── RESET & BASE ───────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
 
@@ -74,7 +66,7 @@
             opacity: 0.04;
         }
 
-        /* ── BOOK CONTAINER ─────────────────────────────────────────── */
+
         .scene {
             position: relative;
             width: 100%;
@@ -117,7 +109,6 @@
             to   { opacity: 1; transform: translateY(0)   scale(1); }
         }
 
-        /* ── PARCHMENT TEXTURE ──────────────────────────────────────── */
         .page {
             flex: 1;
             padding: var(--page-pad-v) var(--page-pad-h);
@@ -145,7 +136,6 @@
                 radial-gradient(ellipse 2px 2px at 6%  74%, rgba(145,105,52,0.06) 0%, transparent 100%);
         }
 
-        /* ── LEFT PAGE ──────────────────────────────────────────────── */
         .page-left {
             text-align: center;
             align-items: center;
@@ -220,7 +210,6 @@
             max-width: 220px;
             position: relative;
             padding: 0 18px;
-            /* Lora renders Vietnamese tone marks beautifully */
         }
 
         .left-quote::before,
@@ -236,7 +225,6 @@
         .left-quote::before { top: 18px; left: -2px; }
         .left-quote::after  { content: '\201D'; bottom: -6px; right: -2px; }
 
-        /* ── SPINE ──────────────────────────────────────────────────── */
         .spine {
             flex: 0 0 var(--spine-width);
             width: var(--spine-width);
@@ -284,7 +272,6 @@
             );
         }
 
-        /* ── RIGHT PAGE ─────────────────────────────────────────────── */
         .page-right {
             background-image:
                 linear-gradient(to left, rgba(30,15,5,0.14) 0%, transparent 18%),
@@ -305,7 +292,6 @@
             pointer-events: none;
         }
 
-        /* ── FORM HEADING ────────────────────────────────────────────── */
         .form-title {
             font-family: var(--font-display);
             font-size: clamp(1.7rem, 3.5vw, 2.3rem);
@@ -325,7 +311,6 @@
             line-height: 1.6;
         }
 
-        /* ── FORM ELEMENTS ───────────────────────────────────────────── */
         .form-group {
             margin-bottom: 22px;
             position: relative;
@@ -419,7 +404,6 @@
             font-family: var(--font-body);
         }
 
-        /* ── ERROR HINT ─────────────────────────────────────────────── */
         .error-hint {
             font-family: var(--font-body);
             font-style: italic;
@@ -436,7 +420,6 @@
             opacity: 1;
         }
 
-        /* ── SUBMIT BUTTON ──────────────────────────────────────────── */
         .btn-row {
             display: flex;
             align-items: center;
@@ -500,7 +483,6 @@
         .btn-submit.loading .btn-spinner { display: block; }
         .btn-submit.loading .btn-text   { opacity: 0.7; }
 
-        /* ── SUCCESS STATE ───────────────────────────────────────────── */
         #success-ui {
             display: none;
             flex-direction: column;
@@ -592,7 +574,6 @@
         .page-left  .page-num { left:  var(--page-pad-h); }
         .page-right .page-num { right: var(--page-pad-h); }
 
-        /* ── FOOTER TAGLINE ──────────────────────────────────────────── */
         .tagline {
             margin-top: 20px;
             font-family: var(--font-display);
@@ -607,7 +588,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ── STAGGERED ANIMATIONS ────────────────────────────────────── */
         .form-group,
         .form-title,
         .form-subtitle,
@@ -627,7 +607,6 @@
         .id-rule       { animation: fadeUp 0.6s 0.7s both; }
         .left-quote    { animation: fadeUp 0.6s 0.85s both; }
 
-        /* ── RESPONSIVE ──────────────────────────────────────────────── */
         @media (max-width: 720px) {
             body { padding: 16px 10px; }
 
@@ -685,7 +664,6 @@
 <div class="scene">
     <div class="book">
 
-        <!-- ═══ LEFT PAGE ═══════════════════════════════════════════ -->
         <div class="page page-left">
             <span class="left-ornament-top">✦ ✦ ✦</span>
 
@@ -703,13 +681,10 @@
             <span class="page-num">i</span>
         </div>
 
-        <!-- ═══ SPINE ════════════════════════════════════════════════ -->
         <div class="spine"></div>
 
-        <!-- ═══ RIGHT PAGE ══════════════════════════════════════════ -->
         <div class="page page-right">
 
-            <!-- FORM ─────────────────────────────────────────── -->
             <form id="letter-form" novalidate>
                 <h2 class="form-title">Gửi tin nhắn…</h2>
                 <p class="form-subtitle">Hãy để lại lời nhắn, tôi sẽ đọc từng chữ.</p>
@@ -748,7 +723,6 @@
                 </div>
             </form>
 
-            <!-- SUCCESS ───────────────────────────────────────── -->
             <div id="success-ui" role="status" aria-live="polite">
                 <div class="seal-wrap">
                     <svg class="wax-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
